@@ -14,7 +14,6 @@ minionsRouter.param("minionId", (req, res, next, id) => {
   if (minion) {
     req.minion = minion;
     req.minionId = id;
-    console.log(req.minionId);
     next();
   } else {
     return next(new Error("Minion not found"));
@@ -40,7 +39,6 @@ minionsRouter.get("/:minionId", (req, res, next) => {
 
 minionsRouter.put("/:minionId", (req, res, next) => {
   let updatedMinion = updateInstanceInDatabase("minions", req.body);
-  console.log(updatedMinion);
   res.send(updatedMinion);
 });
 
