@@ -25,7 +25,7 @@ const validIdea = (req, res, next) => {
 };
 
 ideasRouter.param("ideaId", (req, res, next, id) => {
-  let idea = getFromDatabaseById("ideas", id);
+  const idea = getFromDatabaseById("ideas", id);
   if (idea) {
     req.idea = idea;
     next();

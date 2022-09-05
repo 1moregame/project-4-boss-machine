@@ -7,6 +7,9 @@ const {
   updateInstanceInDatabase,
   deleteFromDatabasebyId,
 } = require("./db");
+const workRouter = require("./work");
+
+minionsRouter.use("/:minionId/work", workRouter);
 
 minionsRouter.param("minionId", (req, res, next, id) => {
   const minion = getFromDatabaseById("minions", id);
