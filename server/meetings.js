@@ -1,13 +1,26 @@
 const express = require("express");
 const meetingsRouter = express.Router();
-const { getAllFromDatabase } = require("./db");
+const {
+  getAllFromDatabase,
+  addToDatabase,
+  deleteAllFromDatabase,
+  createMeeting,
+} = require("./db");
 
 meetingsRouter.get("/", (req, res, next) => {
   let meetings = getAllFromDatabase("meetings");
   res.send(meetings);
+  next();
 });
 
-// POST /api/meetings to create a new meeting and save it to the database.
-// DELETE /api/meetings to delete all meetings from the database.POST /api/minions to create a new minion and save it to the database.
+meetingsRouter.post("/", (req, res, next) => {
+  const meeting = createMeeting();
+  res.status(201).send(addToDatabase("meetings", meeting));
+});
+
+meetingsRouter.delete("/", (req, res, next) => {
+  deleteAllFromDatabase("meetings");
+  res.status(204).send();
+});
 
 module.exports = meetingsRouter;
