@@ -7,6 +7,22 @@ const {
   updateInstanceInDatabase,
   deleteFromDatabasebyId,
 } = require("./db");
+const checkMillionDollarIdea = require("./checkMillionDollarIdea");
+
+const validIdea = (req, res, next) => {
+  const { name, description, numWeeks, weeklyRevenue } = req.body;
+  console.log(req.body);
+  if (
+    typeof name === "string" &&
+    typeof description === "string" &&
+    typeof Number(numWeeks) !== NaN &&
+    typeof Number(weeklyRevenue) !== NaN
+  ) {
+    next();
+  } else {
+    res.status(409).send();
+  }
+};
 
 ideasRouter.param("ideaId", (req, res, next, id) => {
   let idea = getFromDatabaseById("ideas", id);
@@ -14,27 +30,33 @@ ideasRouter.param("ideaId", (req, res, next, id) => {
     req.idea = idea;
     next();
   } else {
-    return next(new Error("No idea found"));
+    return res.status(404).send(new Error("No Idea Found"));
   }
 });
+
 ideasRouter.get("/", (req, res, next) => {
   let ideas = getAllFromDatabase("ideas");
   res.send(ideas);
 });
 
-ideasRouter.post("/", (req, res, next) => {
-  addToDatabase("ideas", req.body);
-  res.send(req.body);
+ideasRouter.post("/", checkMillionDollarIdea, validIdea, (req, res, next) => {
+  let idea = addToDatabase("ideas", req.body);
+  res.status(201).send(idea);
 });
 
 ideasRouter.get("/:ideaId", (req, res, next) => {
   res.send(req.idea);
 });
 
-ideasRouter.put("/:ideaId", (req, res, next) => {
-  let updatedIdea = updateInstanceInDatabase("ideas", req.body);
-  res.status(204).send(updatedIdea);
-});
+ideasRouter.put(
+  "/:ideaId",
+  checkMillionDollarIdea,
+  validIdea,
+  (req, res, next) => {
+    let updatedIdea = updateInstanceInDatabase("ideas", req.body);
+    res.status(204).send(updatedIdea);
+  }
+);
 
 ideasRouter.delete("/:ideaId", (req, res, next) => {
   let success = deleteFromDatabasebyId(req.idea.id);

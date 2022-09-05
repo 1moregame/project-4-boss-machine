@@ -13,23 +13,31 @@ minionsRouter.param("minionId", (req, res, next, id) => {
 
   if (minion) {
     req.minion = minion;
-    req.minionId = id;
     next();
   } else {
-    return next(new Error("Minion not found"));
+    return res.status(404).send(new Error("Minion not found"));
   }
 });
 
+const validMinion = (req, res, next) => {
+  let { name, title, salary } = req.body;
+  if (
+    typeof name === "string" &&
+    typeof title === "string" &&
+    typeof Number(salary) !== NaN
+  ) {
+    next();
+  } else {
+    res.status(400).send();
+  }
+};
 minionsRouter.get("/", (req, res, next) => {
   let minions = getAllFromDatabase("minions");
   res.send(minions);
 });
 
-minionsRouter.post("/", (req, res, next) => {
-  let minion = req.body;
-  if (minion.name && minion.title && minion.weaknesses && minion.salary) {
-    minion = addToDatabase("minions", minion);
-  }
+minionsRouter.post("/", validMinion, (req, res, next) => {
+  let minion = addToDatabase("minions", req.body);
   res.status(201).send(minion);
 });
 
@@ -37,13 +45,13 @@ minionsRouter.get("/:minionId", (req, res, next) => {
   res.send(req.minion);
 });
 
-minionsRouter.put("/:minionId", (req, res, next) => {
+minionsRouter.put("/:minionId", validMinion, (req, res, next) => {
   let updatedMinion = updateInstanceInDatabase("minions", req.body);
   res.send(updatedMinion);
 });
 
 minionsRouter.delete("/:minionId", (req, res, next) => {
-  let success = deleteFromDatabasebyId("minions", req.minionId);
+  let success = deleteFromDatabasebyId("minions", req.minion.id);
   if (success) res.status(204).send();
 });
 

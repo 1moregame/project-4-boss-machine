@@ -1,4 +1,5 @@
 export const formatCash = (num) => {
+  console.log(typeof num);
   let numberWithCommas = num
     .toString()
     .split("")

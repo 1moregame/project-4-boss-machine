@@ -1,17 +1,13 @@
-import React from 'react';
-import { formatCash } from '../utils';
+import React from "react";
+import { formatCash } from "../utils";
 
 const IdeaDescription = ({ idea }) => {
   const weeklyRevenue = formatCash(idea.weeklyRevenue);
   const expectedReturn = formatCash(idea.weeklyRevenue * idea.numWeeks);
   return (
     <div className="idea-edit">
-      <div className="label meetings-label">
-        { idea.name }
-      </div>
-      <div className="idea-description">
-        { idea.description }
-      </div>
+      <div className="label meetings-label">{idea.name}</div>
+      <div className="idea-description">{idea.description}</div>
       <div className="idea-income">
         <div className="idea-detail" id="idea-weekly-revenue">
           <div className="single-idea-label">Revenue/week</div>
@@ -23,11 +19,11 @@ const IdeaDescription = ({ idea }) => {
         </div>
         <div className="idea-detail" id="idea-return">
           <div className="single-idea-label">Expected Return</div>
-          <div className="idea-detail-display">{ expectedReturn }</div>
+          <div className="idea-detail-display">{expectedReturn}</div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default IdeaDescription;
