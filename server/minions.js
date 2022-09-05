@@ -7,6 +7,7 @@ const {
   updateInstanceInDatabase,
   deleteFromDatabasebyId,
 } = require("./db");
+
 const workRouter = require("./work");
 
 minionsRouter.use("/:minionId/work", workRouter);
@@ -40,7 +41,7 @@ minionsRouter.get("/", (req, res, next) => {
 });
 
 minionsRouter.post("/", validMinion, (req, res, next) => {
-  let minion = addToDatabase("minions", req.body);
+  const minion = addToDatabase("minions", req.body);
   res.status(201).send(minion);
 });
 
@@ -55,7 +56,9 @@ minionsRouter.put("/:minionId", validMinion, (req, res, next) => {
 
 minionsRouter.delete("/:minionId", (req, res, next) => {
   let success = deleteFromDatabasebyId("minions", req.minion.id);
-  if (success) res.status(204).send();
+  if (success) res.status(204);
+  else res.status(500);
+  res.send();
 });
 
 module.exports = minionsRouter;

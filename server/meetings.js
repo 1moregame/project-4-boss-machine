@@ -10,7 +10,6 @@ const {
 meetingsRouter.get("/", (req, res, next) => {
   let meetings = getAllFromDatabase("meetings");
   res.send(meetings);
-  next();
 });
 
 meetingsRouter.post("/", (req, res, next) => {

@@ -32,12 +32,17 @@ workRouter.get("/", (req, res, next) => {
 
 workRouter.post("/", (req, res, next) => {
   const newWork = addToDatabase("work", req.body);
-
+  newWork.minionId = req.minion.id;
   res.status(201).send(newWork);
   next();
 });
 
 workRouter.put("/:workId", (req, res, next) => {
+  if (req.minion.id !== req.work.minionId) {
+    return res
+      .status(400)
+      .send(new Error("Cannot modify task form other minion"));
+  }
   const revisedWork = updateInstanceInDatabase("work", req.body);
   res.status(201).send(revisedWork);
   next();
@@ -45,9 +50,9 @@ workRouter.put("/:workId", (req, res, next) => {
 
 workRouter.delete("/:workId", (req, res, next) => {
   const success = deleteFromDatabasebyId("work", req.work.id);
-  if (success) {
-    res.status(204).send();
-  }
+  if (success) res.status(204);
+  else res.status(500);
+  res.send();
 });
 
 module.exports = workRouter;

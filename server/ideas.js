@@ -7,11 +7,11 @@ const {
   updateInstanceInDatabase,
   deleteFromDatabasebyId,
 } = require("./db");
+
 const checkMillionDollarIdea = require("./checkMillionDollarIdea");
 
 const validIdea = (req, res, next) => {
   const { name, description, numWeeks, weeklyRevenue } = req.body;
-  console.log(req.body);
   if (
     typeof name === "string" &&
     typeof description === "string" &&
@@ -40,7 +40,7 @@ ideasRouter.get("/", (req, res, next) => {
 });
 
 ideasRouter.post("/", checkMillionDollarIdea, validIdea, (req, res, next) => {
-  let idea = addToDatabase("ideas", req.body);
+  const idea = addToDatabase("ideas", req.body);
   res.status(201).send(idea);
 });
 
@@ -54,13 +54,15 @@ ideasRouter.put(
   validIdea,
   (req, res, next) => {
     let updatedIdea = updateInstanceInDatabase("ideas", req.body);
-    res.status(204).send(updatedIdea);
+    res.send(updatedIdea);
   }
 );
 
 ideasRouter.delete("/:ideaId", (req, res, next) => {
-  let success = deleteFromDatabasebyId(req.idea.id);
-  if (success) res.status(204).send();
+  let success = deleteFromDatabasebyId("ideas", req.idea.id);
+  if (success) res.status(204);
+  else res.status(500);
+  res.send();
 });
 
 module.exports = ideasRouter;

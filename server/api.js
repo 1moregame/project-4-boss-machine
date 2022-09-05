@@ -6,12 +6,12 @@ const morgan = require("morgan");
 app.use(morgan("dev"));
 
 const minionsRouter = require("./minions");
-app.use("/api/minions", minionsRouter);
+apiRouter.use("/minions", minionsRouter);
 
 const ideasRouter = require("./ideas");
-app.use("/api/ideas", ideasRouter);
+apiRouter.use("/ideas", ideasRouter);
 
 const meetingsRouter = require("./meetings");
-app.use("/api/meetings", meetingsRouter);
+apiRouter.use("/meetings", meetingsRouter);
 
 module.exports = apiRouter;
