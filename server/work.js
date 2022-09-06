@@ -34,7 +34,6 @@ workRouter.post("/", (req, res, next) => {
   const newWork = addToDatabase("work", req.body);
   newWork.minionId = req.minion.id;
   res.status(201).send(newWork);
-  next();
 });
 
 workRouter.put("/:workId", (req, res, next) => {
@@ -45,14 +44,13 @@ workRouter.put("/:workId", (req, res, next) => {
   }
   const revisedWork = updateInstanceInDatabase("work", req.body);
   res.status(201).send(revisedWork);
-  next();
 });
 
 workRouter.delete("/:workId", (req, res, next) => {
   const success = deleteFromDatabasebyId("work", req.work.id);
   if (success) res.status(204);
   else res.status(500);
-  res.send();
+  res.send(new Error("failed to delete work task"));
 });
 
 module.exports = workRouter;
